@@ -42,20 +42,23 @@ class RegisterActivity : AppCompatActivity() {
   }
 
   private fun processData(username: String, email: String, password: String) {
-    networkStatusChecker.performIfConnectedToInternet {
       if (username.isNotBlank() && email.isNotBlank() && password.isNotBlank()) {
+        networkStatusChecker.performIfConnectedToInternet {
         remoteApi.registerUser(UserDataRequest(email, password, username)) { message, error ->
-          if (message != null) {
-            toast(message)
-            onRegisterSuccess()
-          } else if (error != null) {
-            onRegisterError()
+
+          runOnUiThread {
+            if (message != null) {
+              toast(message)
+              onRegisterSuccess()
+            } else if (error != null) {
+              onRegisterError()
+            }
           }
         }
-      } else {
+      }
+      }else {
         onRegisterError()
       }
-    }
   }
 
   private fun onRegisterSuccess() {

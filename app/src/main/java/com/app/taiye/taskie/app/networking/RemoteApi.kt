@@ -5,6 +5,10 @@ import com.raywenderlich.android.taskie.model.Task
 import com.raywenderlich.android.taskie.model.UserProfile
 import com.app.taiye.taskie.app.model.request.AddTaskRequest
 import com.app.taiye.taskie.app.model.request.UserDataRequest
+import java.io.BufferedReader
+import java.io.InputStreamReader
+import java.net.HttpURLConnection
+import java.net.URL
 
 /**
  * Holds decoupled logic for all the API calls.
@@ -19,6 +23,40 @@ class RemoteApi {
   }
 
   fun registerUser(userDataRequest: UserDataRequest, onUserCreated: (String?, Throwable?) -> Unit) {
+      Thread(Runnable {
+          val connection = URL("$BASE_URL/api/register").openConnection() as HttpURLConnection
+          connection.requestMethod = "POST"
+          connection.setRequestProperty("Content-Type","application/json")
+          connection.setRequestProperty("Accept","application/json")
+          connection.readTimeout = 10000
+          connection.connectTimeout = 100000
+          connection.doOutput = true
+          connection.doInput = true
+
+          val body = "{\"name\":\"${userDataRequest.name}\",\"email\":\"$${userDataRequest.email}\"," + "\"password\":\"${userDataRequest.password}\"}"
+
+          val bytes = body.toByteArray()
+
+          try{
+             connection.outputStream.use { outputStream->
+                 outputStream.write(bytes)
+             }
+
+              val reader = InputStreamReader(connection.inputStream)
+              reader.use {  input ->
+                  val response = StringBuilder()
+                  val bufferedReader = BufferedReader(input)
+                  bufferedReader.useLines { lines ->
+                      lines.forEach {
+                          response.append(it.trim())
+                      }
+                  }
+              }
+          }catch (error: Throwable){
+            onUserCreated(null, error)
+          }
+          connection.disconnect()
+      }).start()
     onUserCreated("Success!", null)
   }
 
