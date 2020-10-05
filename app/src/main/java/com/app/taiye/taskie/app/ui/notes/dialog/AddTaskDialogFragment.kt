@@ -34,6 +34,8 @@
 
 package com.raywenderlich.android.taskie.ui.notes.dialog
 
+import android.annotation.SuppressLint
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.LayoutInflater
@@ -41,22 +43,30 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.ArrayAdapter
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.DialogFragment
 import com.app.taiye.taskie.R
 import com.app.taiye.taskie.app.utils.toast
 import com.app.taiye.taskie.app.model.PriorityColor
 import com.raywenderlich.android.taskie.model.Task
 import com.app.taiye.taskie.app.model.request.AddTaskRequest
+import com.app.taiye.taskie.app.networking.NetworkStatusChecker
 import com.app.taiye.taskie.app.networking.RemoteApi
 import kotlinx.android.synthetic.main.fragment_dialog_new_task.*
 
 /**
  * Dialog fragment to create a new task.
  */
+@SuppressLint("NewApi")
 class AddTaskDialogFragment : DialogFragment() {
 
   private var taskAddedListener: TaskAddedListener? = null
   private val remoteApi = RemoteApi()
+
+
+  private val networkStatusChecker by lazy{
+    NetworkStatusChecker(activity?.getSystemService(ConnectivityManager::class.java))
+  }
 
   interface TaskAddedListener {
     fun onTaskAdded(task: Task)
@@ -108,12 +118,16 @@ class AddTaskDialogFragment : DialogFragment() {
     val title = newTaskTitleInput.text.toString()
     val content = newTaskDescriptionInput.text.toString()
     val priority = prioritySelector.selectedItemPosition + 1
+    networkStatusChecker.performIfConnectedToInternet {
+      remoteApi.addTask(AddTaskRequest(title, content, priority)) { task, error ->
+        activity?.runOnUiThread {
+          if (task != null) {
+            onTaskAdded(task)
+          } else if (error != null) {
+            onTaskAddFailed()
+          }
+        }
 
-    remoteApi.addTask(AddTaskRequest(title, content, priority)) { task, error ->
-      if (task != null) {
-        onTaskAdded(task)
-      } else if (error != null) {
-        onTaskAddFailed()
       }
     }
     clearUi()

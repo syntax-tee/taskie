@@ -1,6 +1,7 @@
 
 package com.app.taiye.taskie.app.networking
 
+import com.app.taiye.taskie.app.App
 import com.raywenderlich.android.taskie.model.Task
 import com.raywenderlich.android.taskie.model.UserProfile
 import com.app.taiye.taskie.app.model.request.AddTaskRequest
@@ -80,13 +81,14 @@ class RemoteApi {
           connection.doOutput = true
           connection.doInput = true
 
-          val body = "{\"name\":\"${userDataRequest.name}\",\"email\":\"${userDataRequest.email}\"," + "\"password\":\"${userDataRequest.password}\"}"
+         // val body = "{\"name\":\"${userDataRequest.name}\",\"email\":\"${userDataRequest.email}\"," + "\"password\":\"${userDataRequest.password}\"}"
 
           val requestJson = JSONObject()
           requestJson.put("email", userDataRequest.email)
           requestJson.put("name", userDataRequest.name)
           requestJson.put("password", userDataRequest.password)
 
+          val body = requestJson.toString()
 
           val bytes = body.toByteArray()
 
@@ -142,15 +144,67 @@ class RemoteApi {
   }
 
   fun addTask(addTaskRequest: AddTaskRequest, onTaskCreated: (Task?, Throwable?) -> Unit) {
-    onTaskCreated(
-        Task("id3",
-            addTaskRequest.title,
-            addTaskRequest.content,
-            false,
-            addTaskRequest.taskPriority
-        ), null
-    )
-  }
+
+      Thread(Runnable {
+          val connection = URL("$BASE_URL/api/note").openConnection() as HttpURLConnection
+          connection.requestMethod = "POST"
+          connection.setRequestProperty("Content-Type","application/json")
+          connection.setRequestProperty("Accept","application/json")
+          connection.setRequestProperty("Authorization", App.getToken())
+          connection.readTimeout = 10000
+          connection.connectTimeout = 100000
+          connection.doOutput = true
+          connection.doInput = true
+
+
+          val requestJson = JSONObject()
+          requestJson.put("title", addTaskRequest.title)
+          requestJson.put("content", addTaskRequest.content)
+          requestJson.put("taskPriority", addTaskRequest.taskPriority)
+
+          val body = requestJson.toString()
+
+          val bytes = body.toByteArray()
+
+          try{
+              connection.outputStream.use { outputStream->
+                  outputStream.write(bytes)
+              }
+
+              val reader = InputStreamReader(connection.inputStream)
+              reader.use {  input ->
+                  val response = StringBuilder()
+                  val bufferedReader = BufferedReader(input)
+                  bufferedReader.useLines { lines ->
+                      lines.forEach {
+                          response.append(it.trim())
+                      }
+                  }
+                  val jsonObject = JSONObject(response.toString())
+
+
+
+                  val task = Task(jsonObject.getString("id"),
+                                  jsonObject.getString("title"),
+                                  jsonObject.getString("content"),
+                      jsonObject.getBoolean("isCompleted"),
+                      jsonObject.getInt("taskPriority"))
+
+                 onTaskCreated(task, null)
+              }
+          }catch (error: Throwable){
+              onTaskCreated(null, error)
+          }
+          connection.disconnect()
+      }).start()
+      onTaskCreated(
+          Task("id3",
+              addTaskRequest.title,
+              addTaskRequest.content,
+              false,
+              addTaskRequest.taskPriority
+          ), null
+      )  }
 
   fun getUserProfile(onUserProfileReceived: (UserProfile?, Throwable?) -> Unit) {
     onUserProfileReceived(UserProfile("mail@mail.com", "Filip", 10), null)
