@@ -5,6 +5,7 @@ import com.raywenderlich.android.taskie.model.Task
 import com.raywenderlich.android.taskie.model.UserProfile
 import com.app.taiye.taskie.app.model.request.AddTaskRequest
 import com.app.taiye.taskie.app.model.request.UserDataRequest
+import com.app.taiye.taskie.app.model.response.CompleteNoteResponse
 import com.app.taiye.taskie.app.model.response.GetTasksResponse
 import com.app.taiye.taskie.app.model.response.UserProfileResponse
 import com.google.gson.Gson
@@ -115,8 +116,30 @@ class RemoteApi(private val apiService: RemoteApiService) {
         onTaskDeleted(null)
     }
 
-    fun completeTask(onTaskCompleted: (Throwable?) -> Unit) {
-        onTaskCompleted(null)
+    fun completeTask(taskId: String,onTaskCompleted: (Throwable?) -> Unit) {
+       apiService.completeTask(App.getToken(),taskId).enqueue(object: Callback<ResponseBody>{
+           override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+               val jsonBody = response.body()?.string()
+
+               if(jsonBody == null){
+                   onTaskCompleted(java.lang.NullPointerException("No response"))
+                 return
+               }
+
+               val completeNoteResponse = gson.fromJson(jsonBody, CompleteNoteResponse::class.java)
+               if(completeNoteResponse?.message == null){
+                   onTaskCompleted(NullPointerException("No response"))
+               }else{
+                   onTaskCompleted(null)
+               }
+
+           }
+
+           override fun onFailure(call: Call<ResponseBody>, error: Throwable) {
+               onTaskCompleted(error)
+           }
+
+       })
     }
 
     fun addTask(addTaskRequest: AddTaskRequest, onTaskCreated: (Task?, Throwable?) -> Unit) {

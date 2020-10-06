@@ -72,7 +72,7 @@ class TaskOptionsDialogFragment : DialogFragment() {
     }
 
     completeTask.setOnClickListener {
-      remoteApi.completeTask { error ->
+      remoteApi.completeTask(taskId) { error ->
         if (error == null) {
           taskOptionSelectedListener?.onTaskCompleted(taskId)
         }
