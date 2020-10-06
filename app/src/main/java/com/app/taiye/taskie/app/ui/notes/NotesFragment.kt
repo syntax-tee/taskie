@@ -1,6 +1,5 @@
 package com.raywenderlich.android.taskie.ui.notes
 
-import android.annotation.SuppressLint
 import android.net.ConnectivityManager
 import android.os.Build
 import android.os.Bundle
@@ -8,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.app.taiye.taskie.R
@@ -18,8 +16,7 @@ import com.app.taiye.taskie.app.ui.notes.TaskAdapter
 import com.app.taiye.taskie.app.utils.gone
 import com.app.taiye.taskie.app.utils.toast
 import com.app.taiye.taskie.app.utils.visible
-import com.raywenderlich.android.taskie.model.Task
-import com.app.taiye.taskie.app.networking.RemoteApi
+import com.app.taiye.taskie.app.model.Task
 import com.raywenderlich.android.taskie.ui.notes.dialog.AddTaskDialogFragment
 import com.app.taiye.taskie.app.ui.notes.dialog.TaskOptionsDialogFragment
 import kotlinx.android.synthetic.main.fragment_notes.*

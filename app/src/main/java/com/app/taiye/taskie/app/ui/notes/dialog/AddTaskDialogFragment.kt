@@ -43,16 +43,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.ArrayAdapter
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.DialogFragment
 import com.app.taiye.taskie.R
 import com.app.taiye.taskie.app.App
 import com.app.taiye.taskie.app.utils.toast
 import com.app.taiye.taskie.app.model.PriorityColor
-import com.raywenderlich.android.taskie.model.Task
+import com.app.taiye.taskie.app.model.Task
 import com.app.taiye.taskie.app.model.request.AddTaskRequest
 import com.app.taiye.taskie.app.networking.NetworkStatusChecker
-import com.app.taiye.taskie.app.networking.RemoteApi
 import kotlinx.android.synthetic.main.fragment_dialog_new_task.*
 
 /**

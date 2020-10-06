@@ -7,7 +7,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.app.taiye.taskie.app.model.PriorityColor
-import com.raywenderlich.android.taskie.model.Task
+import com.app.taiye.taskie.app.model.Task
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_task.view.*
 

@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.app.taiye.taskie.R
-import com.raywenderlich.android.taskie.model.Task
+import com.app.taiye.taskie.app.model.Task
 
 /**
  * Displays the tasks from the API, into a list of items.

@@ -1,7 +1,10 @@
 
 package com.app.taiye.taskie.app.model.response
 
+import com.squareup.moshi.Json
+
 /**
  * Holds the user data, to display on the profile screen.
  */
-class UserProfileResponse(val email: String?, val name: String?)
+class UserProfileResponse(@field:Json(name = "email") val email: String?,
+                          @field:Json(name = "name")val name: String?)

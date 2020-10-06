@@ -32,7 +32,7 @@
  * THE SOFTWARE.
  */
 
-package com.raywenderlich.android.taskie.model
+package com.app.taiye.taskie.app.model
 
 /**
  * Full user data.

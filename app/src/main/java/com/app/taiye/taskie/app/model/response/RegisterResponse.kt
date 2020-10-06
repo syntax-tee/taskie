@@ -1,4 +1,6 @@
 
 package com.app.taiye.taskie.app.model.response
 
-data class RegisterResponse(val message: String?= "")
+import com.squareup.moshi.Json
+
+data class RegisterResponse(@field:Json(name = "message")val message: String?= "")
