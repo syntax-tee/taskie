@@ -13,6 +13,7 @@ import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.app.taiye.taskie.R
+import com.app.taiye.taskie.app.App
 import com.app.taiye.taskie.app.networking.NetworkStatusChecker
 import com.app.taiye.taskie.app.ui.notes.TaskAdapter
 import com.app.taiye.taskie.app.utils.gone
@@ -32,7 +33,7 @@ class NotesFragment : Fragment(), AddTaskDialogFragment.TaskAddedListener,
     TaskOptionsDialogFragment.TaskOptionSelectedListener {
 
   private val adapter by lazy { TaskAdapter(::onItemSelected) }
-  private val remoteApi = RemoteApi()
+  private val remoteApi = App.remoteApi
 
   private val networkStatusChecker by lazy{
     NetworkStatusChecker(activity?.getSystemService(ConnectivityManager::class.java))

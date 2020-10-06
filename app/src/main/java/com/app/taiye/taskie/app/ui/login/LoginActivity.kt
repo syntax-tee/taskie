@@ -10,7 +10,6 @@ import com.app.taiye.taskie.R
 import com.app.taiye.taskie.app.App
 import com.app.taiye.taskie.app.model.request.UserDataRequest
 import com.app.taiye.taskie.app.networking.NetworkStatusChecker
-import com.app.taiye.taskie.app.networking.RemoteApi
 import com.app.taiye.taskie.app.ui.main.MainActivity
 import com.app.taiye.taskie.app.ui.register.RegisterActivity
 import com.app.taiye.taskie.app.utils.gone
@@ -23,7 +22,7 @@ import kotlinx.android.synthetic.main.activity_login.*
 @RequiresApi(Build.VERSION_CODES.M)
 class LoginActivity : AppCompatActivity() {
 
-  private val remoteApi = RemoteApi()
+  private val remoteApi = App.remoteApi
 
   private val networkStatusChecker by lazy{
     NetworkStatusChecker(getSystemService(ConnectivityManager::class.java))

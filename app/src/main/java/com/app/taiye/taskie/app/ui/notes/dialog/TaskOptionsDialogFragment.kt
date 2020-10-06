@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.fragment.app.DialogFragment
 import com.app.taiye.taskie.R
+import com.app.taiye.taskie.app.App
 import com.app.taiye.taskie.app.networking.RemoteApi
 import kotlinx.android.synthetic.main.fragment_dialog_task_options.*
 
@@ -18,7 +19,7 @@ class TaskOptionsDialogFragment : DialogFragment() {
 
   private var taskOptionSelectedListener: TaskOptionSelectedListener? = null
 
-  private val remoteApi = RemoteApi()
+  private val remoteApi = App.remoteApi
 
   companion object {
     private const val KEY_TASK_ID = "task_id"

@@ -8,6 +8,7 @@ import android.os.Bundle
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.app.taiye.taskie.R
+import com.app.taiye.taskie.app.App
 import com.app.taiye.taskie.app.utils.gone
 import com.app.taiye.taskie.app.utils.toast
 import com.app.taiye.taskie.app.utils.visible
@@ -22,7 +23,7 @@ import kotlinx.android.synthetic.main.activity_register.*
 @RequiresApi(Build.VERSION_CODES.M)
 class RegisterActivity : AppCompatActivity() {
 
-  private val remoteApi = RemoteApi()
+  private val remoteApi = App.remoteApi
 
   private val networkStatusChecker by lazy{
     NetworkStatusChecker(getSystemService(ConnectivityManager::class.java))
@@ -46,14 +47,12 @@ class RegisterActivity : AppCompatActivity() {
         networkStatusChecker.performIfConnectedToInternet {
         remoteApi.registerUser(UserDataRequest(email, password, username)) { message, error ->
 
-          runOnUiThread {
             if (message != null) {
               toast(message)
               onRegisterSuccess()
             } else if (error != null) {
               onRegisterError()
             }
-          }
         }
       }
       }else {
