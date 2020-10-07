@@ -4,11 +4,7 @@ import com.app.taiye.taskie.app.model.Task
 import com.app.taiye.taskie.app.model.UserProfile
 import com.app.taiye.taskie.app.model.request.AddTaskRequest
 import com.app.taiye.taskie.app.model.request.UserDataRequest
-import com.app.taiye.taskie.app.model.response.CompleteNoteResponse
-import com.app.taiye.taskie.app.model.response.GetTasksResponse
-import com.app.taiye.taskie.app.model.response.RegisterResponse
-import com.app.taiye.taskie.app.model.response.UserProfileResponse
-import com.app.taiye.taskie.app.model.response.LoginResponse
+import com.app.taiye.taskie.app.model.response.*
 import okhttp3.ResponseBody
 import  retrofit2.Call
 import retrofit2.http.*

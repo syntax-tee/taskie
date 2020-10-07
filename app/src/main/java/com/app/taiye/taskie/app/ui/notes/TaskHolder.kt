@@ -1,5 +1,3 @@
-
-
 package com.app.taiye.taskie.app.ui.notes
 
 import android.view.View

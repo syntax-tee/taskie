@@ -37,7 +37,7 @@ package com.raywenderlich.android.taskie.ui.main
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
-import com.raywenderlich.android.taskie.ui.notes.NotesFragment
+import com.app.taiye.taskie.app.ui.notes.NotesFragment
 import com.app.taiye.taskie.app.ui.profile.ProfileFragment
 
 /**

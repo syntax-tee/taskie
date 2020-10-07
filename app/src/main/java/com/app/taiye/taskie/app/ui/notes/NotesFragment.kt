@@ -1,4 +1,4 @@
-package com.raywenderlich.android.taskie.ui.notes
+package com.app.taiye.taskie.app.ui.notes
 
 import android.net.ConnectivityManager
 import android.os.Build
@@ -11,13 +11,12 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.app.taiye.taskie.R
 import com.app.taiye.taskie.app.App
+import com.app.taiye.taskie.app.model.Task
 import com.app.taiye.taskie.app.networking.NetworkStatusChecker
-import com.app.taiye.taskie.app.ui.notes.TaskAdapter
 import com.app.taiye.taskie.app.utils.gone
 import com.app.taiye.taskie.app.utils.toast
 import com.app.taiye.taskie.app.utils.visible
-import com.app.taiye.taskie.app.model.Task
-import com.raywenderlich.android.taskie.ui.notes.dialog.AddTaskDialogFragment
+import com.app.taiye.taskie.app.ui.notes.dialog.AddTaskDialogFragment
 import com.app.taiye.taskie.app.ui.notes.dialog.TaskOptionsDialogFragment
 import kotlinx.android.synthetic.main.fragment_notes.*
 

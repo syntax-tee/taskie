@@ -5,10 +5,10 @@ import kotlinx.serialization.json.Json
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.logging.HttpLoggingInterceptor
 
 val contentType ="application/json".toMediaType()
 
-fun buildClient(): OkHttpClient = OkHttpClient.Builder().build()
 
 
 fun buildRetrofit(): Retrofit {
@@ -21,3 +21,9 @@ fun buildRetrofit(): Retrofit {
 }
 
 fun buildApiService(): RemoteApiService = buildRetrofit().create(RemoteApiService::class.java)
+
+
+fun buildClient(): OkHttpClient = OkHttpClient.Builder()
+    .addInterceptor(HttpLoggingInterceptor().apply {
+    level = HttpLoggingInterceptor.Level.BODY
+   }).build()

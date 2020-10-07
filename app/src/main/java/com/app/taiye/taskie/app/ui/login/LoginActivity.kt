@@ -8,6 +8,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.app.taiye.taskie.R
 import com.app.taiye.taskie.app.App
+import com.app.taiye.taskie.app.model.Success
 import com.app.taiye.taskie.app.model.request.UserDataRequest
 import com.app.taiye.taskie.app.networking.NetworkStatusChecker
 import com.app.taiye.taskie.app.ui.main.MainActivity
@@ -54,10 +55,10 @@ class LoginActivity : AppCompatActivity() {
 
   private fun logUserIn(userDataRequest: UserDataRequest) {
     networkStatusChecker.performIfConnectedToInternet {
-      remoteApi.loginUser(userDataRequest) { token: String?, throwable: Throwable? ->
-        if (token != null && token.isNotBlank()) {
-            onLoginSuccess(token)
-          } else if (throwable != null) {
+      remoteApi.loginUser(userDataRequest) { result ->
+        if (result is Success) {
+            onLoginSuccess(result.data)
+          } else {
             showLoginError()
           }
       }
