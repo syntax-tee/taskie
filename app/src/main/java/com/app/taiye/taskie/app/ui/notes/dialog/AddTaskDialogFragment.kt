@@ -20,6 +20,9 @@ import com.app.taiye.taskie.app.model.Task
 import com.app.taiye.taskie.app.model.request.AddTaskRequest
 import com.app.taiye.taskie.app.networking.NetworkStatusChecker
 import kotlinx.android.synthetic.main.fragment_dialog_new_task.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 /**
  * Dialog fragment to create a new task.
@@ -86,13 +89,13 @@ class AddTaskDialogFragment : DialogFragment() {
     val content = newTaskDescriptionInput.text.toString()
     val priority = prioritySelector.selectedItemPosition + 1
     networkStatusChecker.performIfConnectedToInternet {
-      remoteApi.addTask(AddTaskRequest(title, content, priority)) { result ->
-          if (result is Success) {
-            onTaskAdded(result.data)
-          } else{
-            onTaskAddFailed()
-          }
-
+      GlobalScope.launch (Dispatchers.Main) {
+        val result = remoteApi.addTask(AddTaskRequest(title, content, priority))
+        if(result is Success){
+          onTaskAdded(result.data)
+        }else{
+          onTaskAddFailed()
+        }
       }
     }
     clearUi()

@@ -14,26 +14,26 @@ import retrofit2.http.*
 interface RemoteApiService {
 
     @POST("/api/register")
-    fun registerUser(@Body userDataRequest: UserDataRequest): Call<RegisterResponse>
+   suspend fun registerUser(@Body userDataRequest: UserDataRequest): RegisterResponse
 
     @GET("/api/note")
-    fun getNotes(): Call<GetTasksResponse>
+    suspend fun getNotes(): GetTasksResponse
 
 
     @POST("/api/note")
-    fun addTask(@Body addTaskRequest: AddTaskRequest): Call<Task>
+    suspend fun addTask(@Body addTaskRequest: AddTaskRequest): Task
 
     @POST("/api/login")
-    fun loginUser(@Body userDataRequest:UserDataRequest): Call<LoginResponse>
+    suspend fun loginUser(@Body userDataRequest:UserDataRequest): LoginResponse
 
     @GET("/api/user/profile")
-    fun getMyProfile():Call<UserProfileResponse>
+    suspend fun getMyProfile():UserProfileResponse
 
     @POST("api/note/complete")
-    fun completeTask(@Query("id") noteId: String): Call<CompleteNoteResponse>
+    suspend fun completeTask(@Query("id") noteId: String): CompleteNoteResponse
 
 
     @DELETE("api/note/")
-    fun deleteNote(@Query("id") note_id: String): Call<DeleteNoteResponse>
+    suspend  fun deleteNote(@Query("id") note_id: String): DeleteNoteResponse
 
 }

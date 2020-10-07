@@ -16,6 +16,9 @@ import com.app.taiye.taskie.app.ui.register.RegisterActivity
 import com.app.taiye.taskie.app.utils.gone
 import com.app.taiye.taskie.app.utils.visible
 import kotlinx.android.synthetic.main.activity_login.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 /**
  * Displays the Login screen, with the options to head over to the Register screen.
@@ -55,12 +58,11 @@ class LoginActivity : AppCompatActivity() {
 
   private fun logUserIn(userDataRequest: UserDataRequest) {
     networkStatusChecker.performIfConnectedToInternet {
-      remoteApi.loginUser(userDataRequest) { result ->
+      GlobalScope.launch (Dispatchers.Main) {
+        val result = remoteApi.loginUser(userDataRequest)
         if (result is Success) {
-            onLoginSuccess(result.data)
-          } else {
-            showLoginError()
-          }
+          onLoginSuccess(result.data)
+        }
       }
     }
   }

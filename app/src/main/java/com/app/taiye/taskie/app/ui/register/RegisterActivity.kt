@@ -11,12 +11,13 @@ import com.app.taiye.taskie.R
 import com.app.taiye.taskie.app.App
 import com.app.taiye.taskie.app.model.Success
 import com.app.taiye.taskie.app.utils.gone
-import com.app.taiye.taskie.app.utils.toast
 import com.app.taiye.taskie.app.utils.visible
 import com.app.taiye.taskie.app.model.request.UserDataRequest
 import com.app.taiye.taskie.app.networking.NetworkStatusChecker
-import com.app.taiye.taskie.app.networking.RemoteApi
 import kotlinx.android.synthetic.main.activity_register.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 /**
  * Displays the Register screen, with the options to register, or head over to Login!
@@ -46,17 +47,16 @@ class RegisterActivity : AppCompatActivity() {
   private fun processData(username: String, email: String, password: String) {
       if (username.isNotBlank() && email.isNotBlank() && password.isNotBlank()) {
         networkStatusChecker.performIfConnectedToInternet {
-        remoteApi.registerUser(UserDataRequest(email, password, username)) { result ->
-
-            if (result is Success) {
-              toast(result.data)
+          GlobalScope.launch (Dispatchers.Main) {
+           val result = remoteApi.registerUser(UserDataRequest(email, password, username))
+            if(result is Success){
+              Success(result.data)
               onRegisterSuccess()
-            } else  {
-              onRegisterError()
             }
+
+          }
         }
-      }
-      }else {
+      } else {
         onRegisterError()
       }
   }

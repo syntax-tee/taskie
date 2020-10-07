@@ -4,4 +4,4 @@ import kotlinx.serialization.Serializable
 
 
 @Serializable
-data class DeleteNoteResponse(val message:String?) { }
+data class DeleteNoteResponse(val message:String) { }

@@ -5,4 +5,4 @@ import kotlinx.serialization.Serializable
 
 
 @Serializable
-data class RegisterResponse(val message: String?= "")
+data class RegisterResponse(val message: String= "")

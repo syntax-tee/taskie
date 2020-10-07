@@ -7,4 +7,4 @@ import kotlinx.serialization.Serializable
  * Full user data.
  */
 @Serializable
-class UserProfile(val email: String, val name: String, val numberOfNotes: Int)
+class UserProfile(val email: String?, val name: String?, val numberOfNotes: Int?)

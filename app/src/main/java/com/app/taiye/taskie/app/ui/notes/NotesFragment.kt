@@ -20,6 +20,9 @@ import com.app.taiye.taskie.app.utils.visible
 import com.app.taiye.taskie.app.ui.notes.dialog.AddTaskDialogFragment
 import com.app.taiye.taskie.app.ui.notes.dialog.TaskOptionsDialogFragment
 import kotlinx.android.synthetic.main.fragment_notes.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 /**
  * Fetches and displays notes from the API.
@@ -78,15 +81,14 @@ class NotesFragment : Fragment(), AddTaskDialogFragment.TaskAddedListener,
         dialog.show(childFragmentManager, dialog.tag)
     }
 
-    @RequiresApi(Build.VERSION_CODES.M)
     private fun getAllTasks() {
         progress.visible()
-
         networkStatusChecker.performIfConnectedToInternet {
-            remoteApi.getTasks { result ->
-                if (result is Success) {
-                    onTaskListReceived(result.data)
-                } else  {
+            GlobalScope.launch (Dispatchers.Main) {
+              val tasks  = remoteApi.getTasks()
+                if(tasks is Success){
+                    onTaskListReceived(tasks.data)
+                }else{
                     onGetTasksFailed()
                 }
             }
