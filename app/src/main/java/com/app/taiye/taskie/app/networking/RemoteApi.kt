@@ -8,6 +8,8 @@ import com.app.taiye.taskie.app.model.UserProfile
 import com.app.taiye.taskie.app.model.request.AddTaskRequest
 import com.app.taiye.taskie.app.model.request.UserDataRequest
 import com.app.taiye.taskie.app.model.response.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -85,27 +87,42 @@ class RemoteApi(private val apiService: RemoteApiService) {
         })
     }
 
-    fun deleteTask(taskId: String,onTaskDeleted: (Result<String>) -> Unit)  {
-        apiService.deleteNote(taskId).enqueue(object: Callback<DeleteNoteResponse>{
-            override fun onResponse(
-                call: Call<DeleteNoteResponse>,
-                response: Response<DeleteNoteResponse>
-            ) {
-                val deleteNoteResponse = response.body()
+//    fun deleteTask(taskId: String,onTaskDeleted: (Result<String>) -> Unit)  {
+//        apiService.deleteNote(taskId).enqueue(object: Callback<DeleteNoteResponse>{
+//            override fun onResponse(
+//                call: Call<DeleteNoteResponse>,
+//                response: Response<DeleteNoteResponse>
+//            ) {
+//                val deleteNoteResponse = response.body()
+//
+//                if(deleteNoteResponse?.message == null){
+//                    onTaskDeleted(Failure(NullPointerException("No response")))
+//                }else{
+//                    onTaskDeleted(Success(deleteNoteResponse.message))
+//                }
+//            }
+//            override fun onFailure(call: Call<DeleteNoteResponse>, error: Throwable) {
+//                onTaskDeleted(Failure(error))
+//            }
+//
+//
+//        })
+//    }
 
-                if(deleteNoteResponse?.message == null){
-                    onTaskDeleted(Failure(NullPointerException("No response")))
-                }else{
-                    onTaskDeleted(Success(deleteNoteResponse.message))
-                }
-            }
-            override fun onFailure(call: Call<DeleteNoteResponse>, error: Throwable) {
-                onTaskDeleted(Failure(error))
-            }
+    suspend fun deleteTask(taskId: String): Result<String> = withContext(Dispatchers.IO) {
+       try {
+           val data = apiService.deleteNote(taskId).execute().body()
 
-
-        })
+           if(data?.message == null){
+               Failure(NullPointerException("No response"))
+           }else{
+            Success(data.message)
+           }
+       }catch (error: Throwable){
+           Failure(error)
+       }
     }
+
 
     fun completeTask(taskId: String,onTaskCompleted: (Result<String>) -> Unit) {
        apiService.completeTask(taskId).enqueue(object: Callback<CompleteNoteResponse>{
