@@ -1,6 +1,8 @@
 
 package com.app.taiye.taskie.app.ui.notes.dialog
 
+import android.annotation.SuppressLint
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,17 +11,24 @@ import android.view.WindowManager
 import androidx.fragment.app.DialogFragment
 import com.app.taiye.taskie.R
 import com.app.taiye.taskie.app.App
-import com.app.taiye.taskie.app.networking.RemoteApi
+import com.app.taiye.taskie.app.model.Success
+import com.app.taiye.taskie.app.networking.NetworkStatusChecker
 import kotlinx.android.synthetic.main.fragment_dialog_task_options.*
 
 /**
  * Displays the options to delete or complete a task.
  */
+@SuppressLint("NewApi")
 class TaskOptionsDialogFragment : DialogFragment() {
 
   private var taskOptionSelectedListener: TaskOptionSelectedListener? = null
 
   private val remoteApi = App.remoteApi
+
+  private val networkStatusChecker by lazy {
+    NetworkStatusChecker(activity?.getSystemService(ConnectivityManager::class.java))
+  }
+
 
   companion object {
     private const val KEY_TASK_ID = "task_id"
@@ -42,15 +51,19 @@ class TaskOptionsDialogFragment : DialogFragment() {
     setStyle(STYLE_NO_TITLE, R.style.FragmentDialogTheme)
   }
 
-  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-      savedInstanceState: Bundle?): View? {
+  override fun onCreateView(
+    inflater: LayoutInflater, container: ViewGroup?,
+    savedInstanceState: Bundle?
+  ): View? {
     return inflater.inflate(R.layout.fragment_dialog_task_options, container)
   }
 
   override fun onStart() {
     super.onStart()
-    dialog?.window?.setLayout(WindowManager.LayoutParams.MATCH_PARENT,
-        WindowManager.LayoutParams.WRAP_CONTENT)
+    dialog?.window?.setLayout(
+      WindowManager.LayoutParams.MATCH_PARENT,
+      WindowManager.LayoutParams.WRAP_CONTENT
+    )
   }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -63,25 +76,29 @@ class TaskOptionsDialogFragment : DialogFragment() {
     if (taskId.isEmpty()) dismissAllowingStateLoss()
 
     deleteTask.setOnClickListener {
-      remoteApi.deleteTask { error ->
-        if (error == null) {
-          taskOptionSelectedListener?.onTaskDeleted(taskId)
+      networkStatusChecker.performIfConnectedToInternet {
+        remoteApi.deleteTask(taskId) { result ->
+          if (result is Success) {
+            taskOptionSelectedListener?.onTaskDeleted(taskId)
+          }
+          dismissAllowingStateLoss()
         }
-        dismissAllowingStateLoss()
       }
     }
 
     completeTask.setOnClickListener {
-      remoteApi.completeTask(taskId) { error ->
-        if (error == null) {
-          taskOptionSelectedListener?.onTaskCompleted(taskId)
+      networkStatusChecker.performIfConnectedToInternet {
+        remoteApi.completeTask(taskId) { result ->
+          if (result is Success) {
+            taskOptionSelectedListener?.onTaskCompleted(taskId)
+          }
+          dismissAllowingStateLoss()
         }
-        dismissAllowingStateLoss()
       }
     }
   }
 
-  fun setTaskOptionSelectedListener(taskOptionSelectedListener: TaskOptionSelectedListener) {
-    this.taskOptionSelectedListener = taskOptionSelectedListener
+    fun setTaskOptionSelectedListener(taskOptionSelectedListener: TaskOptionSelectedListener) {
+      this.taskOptionSelectedListener = taskOptionSelectedListener
+    }
   }
-}

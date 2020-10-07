@@ -1,6 +1,5 @@
 package com.app.taiye.taskie.app.networking
 
-import com.app.taiye.taskie.app.App
 import com.app.taiye.taskie.app.model.Failure
 import com.app.taiye.taskie.app.model.Success
 import com.app.taiye.taskie.app.model.Result
@@ -67,7 +66,7 @@ class RemoteApi(private val apiService: RemoteApiService) {
     }
 
     fun getTasks(onTasksReceived: (Result<List<Task>>) -> Unit) {
-        apiService.getNotes(App.getToken()).enqueue(object : Callback<GetTasksResponse> {
+        apiService.getNotes().enqueue(object : Callback<GetTasksResponse> {
             override fun onResponse(call: Call<GetTasksResponse>, response: Response<GetTasksResponse>) {
 
                 val data = response.body()
@@ -86,12 +85,30 @@ class RemoteApi(private val apiService: RemoteApiService) {
         })
     }
 
-    fun deleteTask(onTaskDeleted: (Throwable?) -> Unit) {
-        onTaskDeleted(null)
+    fun deleteTask(taskId: String,onTaskDeleted: (Result<String>) -> Unit)  {
+        apiService.deleteNote(taskId).enqueue(object: Callback<DeleteNoteResponse>{
+            override fun onResponse(
+                call: Call<DeleteNoteResponse>,
+                response: Response<DeleteNoteResponse>
+            ) {
+                val deleteNoteResponse = response.body()
+
+                if(deleteNoteResponse?.message == null){
+                    onTaskDeleted(Failure(NullPointerException("No response")))
+                }else{
+                    onTaskDeleted(Success(deleteNoteResponse.message))
+                }
+            }
+            override fun onFailure(call: Call<DeleteNoteResponse>, error: Throwable) {
+                onTaskDeleted(Failure(error))
+            }
+
+
+        })
     }
 
     fun completeTask(taskId: String,onTaskCompleted: (Result<String>) -> Unit) {
-       apiService.completeTask(App.getToken(),taskId).enqueue(object: Callback<CompleteNoteResponse>{
+       apiService.completeTask(taskId).enqueue(object: Callback<CompleteNoteResponse>{
            override fun onResponse(
                call: Call<CompleteNoteResponse>,
                response: Response<CompleteNoteResponse>
@@ -120,7 +137,7 @@ class RemoteApi(private val apiService: RemoteApiService) {
     fun addTask(addTaskRequest: AddTaskRequest, onTaskCreated: (Result<Task>) -> Unit) {
 
 
-        apiService.addTask(App.getToken(),addTaskRequest).enqueue(object : Callback<Task> {
+        apiService.addTask(addTaskRequest).enqueue(object : Callback<Task> {
             override fun onResponse(call: Call<Task>, response: Response<Task>) {
                 val getTaskResponse = response.body()
                 if (getTaskResponse == null) {
@@ -151,7 +168,7 @@ class RemoteApi(private val apiService: RemoteApiService) {
             }
             val tasks = result as Success
 
-            apiService.getMyProfile(App.getToken()).enqueue(object : Callback<UserProfileResponse> {
+            apiService.getMyProfile().enqueue(object : Callback<UserProfileResponse> {
                 override fun onResponse(call: Call<UserProfileResponse>, response: Response<UserProfileResponse>) {
 
                     val userProfileResponse = response.body()
