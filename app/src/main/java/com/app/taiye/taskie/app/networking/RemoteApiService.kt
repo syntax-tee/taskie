@@ -13,7 +13,7 @@ import retrofit2.http.*
  */
 interface RemoteApiService {
 
-    @POST("/api/register")
+   @POST("/api/register")
    suspend fun registerUser(@Body userDataRequest: UserDataRequest): RegisterResponse
 
     @GET("/api/note")

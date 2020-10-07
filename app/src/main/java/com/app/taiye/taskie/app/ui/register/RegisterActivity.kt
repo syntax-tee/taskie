@@ -39,8 +39,7 @@ class RegisterActivity : AppCompatActivity() {
 
   private fun initUi() {
     register.setOnClickListener {
-      processData(nameInput.text.toString(), emailInput.text.toString(),
-          passwordInput.text.toString())
+      processData(nameInput.text.toString(), emailInput.text.toString(), passwordInput.text.toString())
     }
   }
 
@@ -50,7 +49,6 @@ class RegisterActivity : AppCompatActivity() {
           GlobalScope.launch (Dispatchers.Main) {
            val result = remoteApi.registerUser(UserDataRequest(email, password, username))
             if(result is Success){
-              Success(result.data)
               onRegisterSuccess()
             }
 
