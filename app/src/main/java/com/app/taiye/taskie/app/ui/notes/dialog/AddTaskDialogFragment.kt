@@ -15,6 +15,7 @@ import com.app.taiye.taskie.R
 import com.app.taiye.taskie.app.App
 import com.app.taiye.taskie.app.utils.toast
 import com.app.taiye.taskie.app.model.PriorityColor
+import com.app.taiye.taskie.app.model.Success
 import com.app.taiye.taskie.app.model.Task
 import com.app.taiye.taskie.app.model.request.AddTaskRequest
 import com.app.taiye.taskie.app.networking.NetworkStatusChecker
@@ -85,10 +86,10 @@ class AddTaskDialogFragment : DialogFragment() {
     val content = newTaskDescriptionInput.text.toString()
     val priority = prioritySelector.selectedItemPosition + 1
     networkStatusChecker.performIfConnectedToInternet {
-      remoteApi.addTask(AddTaskRequest(title, content, priority)) { task, error ->
-          if (task != null) {
-            onTaskAdded(task)
-          } else if (error != null) {
+      remoteApi.addTask(AddTaskRequest(title, content, priority)) { result ->
+          if (result is Success) {
+            onTaskAdded(result.data)
+          } else{
             onTaskAddFailed()
           }
 
