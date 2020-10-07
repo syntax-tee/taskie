@@ -10,6 +10,7 @@ import com.app.taiye.taskie.app.model.response.GetTasksResponse
 import com.app.taiye.taskie.app.model.response.RegisterResponse
 import com.app.taiye.taskie.app.model.response.UserProfileResponse
 import com.app.taiye.taskie.app.model.response.LoginResponse
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -158,7 +159,7 @@ class RemoteApi(private val apiService: RemoteApiService) {
         })
     }
 
-    fun getUserProfile(onUserProfileReceived: (UserProfile?, Throwable?) -> Unit) {
+    /*fun getUserProfile(onUserProfileReceived: (UserProfile?, Throwable?) -> Unit) {
         getTasks { tasks, error ->
             if (error != null && error !is java.lang.NullPointerException) {
                 onUserProfileReceived(null, error)
@@ -172,14 +173,47 @@ class RemoteApi(private val apiService: RemoteApiService) {
                 ) {
 
                     val userProfileResponse = response.body()
-                    val jsonBody = response.body()
-                    if (jsonBody == null) {
+                    if (userProfileResponse == null) {
                         onUserProfileReceived(null, error)
                         return
                     }
 
 
                     if (userProfileResponse?.email == null || userProfileResponse?.name == null) {
+                        onUserProfileReceived(null, error)
+                    } else {
+                        onUserProfileReceived(
+                            UserProfile(
+                                userProfileResponse.email,
+                                userProfileResponse.name,
+                                tasks.size
+                            ), error
+                        )
+
+                    }
+
+                }
+
+                override fun onFailure(call: Call<UserProfileResponse>, t: Throwable) {
+                    onUserProfileReceived(null, error)
+                }
+
+            })
+        }
+    }*/
+    fun getUserProfile(onUserProfileReceived: (UserProfile?, Throwable?) -> Unit) {
+        getTasks { tasks, error ->
+            if (error != null && error !is java.lang.NullPointerException) {
+                onUserProfileReceived(null, error)
+                return@getTasks
+            }
+
+            apiService.getMyProfile(App.getToken()).enqueue(object : Callback<UserProfileResponse> {
+                override fun onResponse(call: Call<UserProfileResponse>, response: Response<UserProfileResponse>) {
+
+                    val userProfileResponse = response.body()
+
+                    if (userProfileResponse?.email == null || userProfileResponse.name == null) {
                         onUserProfileReceived(null, error)
                     } else {
                         onUserProfileReceived(

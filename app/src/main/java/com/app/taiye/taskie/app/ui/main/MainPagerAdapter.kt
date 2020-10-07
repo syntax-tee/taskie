@@ -38,7 +38,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import com.raywenderlich.android.taskie.ui.notes.NotesFragment
-import com.raywenderlich.android.taskie.ui.profile.ProfileFragment
+import com.app.taiye.taskie.app.ui.profile.ProfileFragment
 
 /**
  * Displays the pages for the main screen.

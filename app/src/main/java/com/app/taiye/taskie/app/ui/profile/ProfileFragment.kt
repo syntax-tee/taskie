@@ -32,7 +32,7 @@
  * THE SOFTWARE.
  */
 
-package com.raywenderlich.android.taskie.ui.profile
+package com.app.taiye.taskie.app.ui.profile
 
 import android.content.Intent
 import android.os.Bundle
@@ -42,7 +42,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.app.taiye.taskie.R
 import com.app.taiye.taskie.app.App
-import com.app.taiye.taskie.app.networking.RemoteApi
 import com.app.taiye.taskie.app.ui.login.LoginActivity
 import kotlinx.android.synthetic.main.fragment_profile.*
 

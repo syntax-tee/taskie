@@ -1,8 +1,9 @@
 
 package com.app.taiye.taskie.app.model.request
 
-import com.squareup.moshi.Json
+import kotlinx.serialization.Serializable
 
-data class UserDataRequest(@field:Json(name = "email")val email: String,
-                           @field:Json(name = "password") val password: String,
-                           @field:Json(name = "name") val name: String? = null)
+@Serializable
+data class UserDataRequest(val email: String,
+                           val password: String,
+                           val name: String? = null)

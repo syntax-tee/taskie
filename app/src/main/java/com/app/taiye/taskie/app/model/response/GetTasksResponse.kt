@@ -1,7 +1,7 @@
-
 package com.app.taiye.taskie.app.model.response
 
 import com.app.taiye.taskie.app.model.Task
-import com.squareup.moshi.Json
+import kotlinx.serialization.Serializable
 
-data class GetTasksResponse(@field:Json(name = "notes")val notes: List<Task> = mutableListOf())
+@Serializable
+data class GetTasksResponse(val notes: List<Task> = mutableListOf())

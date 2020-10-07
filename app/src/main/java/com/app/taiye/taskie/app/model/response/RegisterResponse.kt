@@ -1,6 +1,8 @@
 
 package com.app.taiye.taskie.app.model.response
 
-import com.squareup.moshi.Json
+import kotlinx.serialization.Serializable
 
-data class RegisterResponse(@field:Json(name = "message")val message: String?= "")
+
+@Serializable
+data class RegisterResponse(val message: String?= "")
