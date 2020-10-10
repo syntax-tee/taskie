@@ -5,6 +5,7 @@ import android.net.NetworkCapabilities
 import android.os.Build
 import androidx.annotation.RequiresApi
 
+
 class NetworkStatusChecker(private val connectivityManager: ConnectivityManager?) {
 
     @RequiresApi(Build.VERSION_CODES.M)
@@ -23,4 +24,6 @@ class NetworkStatusChecker(private val connectivityManager: ConnectivityManager?
                 ||capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)
                 ||capabilities.hasTransport(NetworkCapabilities.TRANSPORT_VPN)
     }
+
+
 }
