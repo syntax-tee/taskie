@@ -18,7 +18,6 @@ import kotlinx.android.synthetic.main.activity_register.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import  com.app.taiye.taskie.app.utils.alertDialog
 
 /**
  * Displays the Register screen, with the options to register, or head over to Login!
